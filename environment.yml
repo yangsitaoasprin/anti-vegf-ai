@@ -1,0 +1,31 @@
+name: anti_vegf_repro
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - matplotlib
+  - pandas
+  - pillow
+  # Figure generation (Fig. 7 & Graphical Abstract panels) needs PyMOL:
+  #   conda install -c conda-forge pymol-open-source
+  # A separate `pymol` env was used in the original work:
+  #   /root/miniconda3/envs/pymol/bin/python render_ga_outcome.py
+  - pip
+  - pip:
+      # no pip-only packages required for the open-source analysis/figure layers
+      - boltz          # optional: only if re-running Boltz-1 predictions
+      # openfold3 / pyg / etc. are optional and heavy; the bundled data is sufficient
+      # to reproduce all published numbers without them.
+
+# ---------------------------------------------------------------------------
+# Licensing note for the DESIGN layer (code/design_pipeline/):
+#   * RFdiffusion        — requires a commercial license from the authors.
+#   * Schrödinger/Maestro— requires a commercial license (MM-GBSA ΔG step).
+#   * AlphaFold3         — requires a DeepMind academic license (04_af3_rerank.py).
+# These dependencies are documented for transparency; the open-source analysis and
+# figure-generation layers above run without them.
+# ---------------------------------------------------------------------------

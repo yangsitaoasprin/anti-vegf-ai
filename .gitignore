@@ -1,0 +1,4 @@
+# Local figure outputs (regenerable)
+fig7_out/
+*.png
+!data/**/*.png

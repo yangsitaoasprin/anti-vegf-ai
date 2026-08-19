@@ -1,0 +1,9 @@
+# Minimal pip requirements for the open-source analysis + figure-generation layers.
+# (A conda env is recommended — see environment.yml — but pip works for these.)
+numpy
+scipy
+matplotlib
+pandas
+pillow
+# Optional, only for re-running predictions (not needed to reproduce the figures/tables):
+# boltz
