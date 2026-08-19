@@ -3,7 +3,7 @@
 # Author : Yang Sitao (杨四涛)
 # Affiliation : School of Pharmaceutical Sciences, Dali University;
 #               The Third Affiliated Hospital of Dali University
-# Contact : yangsitaoasprin@126.com
+# Contact : yangsitaoasprin@swpu.edu.cn
 # License : MIT (see ../../LICENSE)
 # Purpose: Guardrail checks that figures match the manuscript text (run before
 #          committing any figure change).

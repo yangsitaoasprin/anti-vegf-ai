@@ -2,7 +2,7 @@
 # Author : Yang Sitao (杨四涛)
 # Affiliation : School of Pharmaceutical Sciences, Dali University;
 #               The Third Affiliated Hospital of Dali University
-# Contact : yangsitaoasprin@126.com
+# Contact : yangsitaoasprin@swpu.edu.cn
 # License : MIT (see ../../LICENSE)
 # =============================================================================
 #!/usr/bin/env python3

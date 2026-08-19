@@ -10,7 +10,7 @@ can attribute and contact the authors of the code.
 |---|---|
 | **Name** | Yang Sitao (杨四涛) |
 | **Affiliations** | School of Pharmaceutical Sciences, Dali University<br>The Third Affiliated Hospital of Dali University |
-| **Email** | yangsitaoasprin@126.com |
+| **Email** | yangsitaoasprin@swpu.edu.cn |
 | **ORCID** | _(to be filled by author)_ |
 | **Roles (CRediT)** | Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization |
 

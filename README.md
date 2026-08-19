@@ -17,7 +17,7 @@ manuscript. The work designs and ranks de novo miniprotein binders against VEGF-
 |---|---|
 | **Author** | Yang Sitao (杨四涛) |
 | **Affiliation** | School of Pharmaceutical Sciences, Dali University; The Third Affiliated Hospital of Dali University |
-| **Email** | yangsitaoasprin@126.com |
+| **Email** | yangsitaoasprin@swpu.edu.cn |
 | **Code license** | MIT (see `LICENSE`) |
 | **Data license** | CC-BY-4.0 (representative structures + tables in `data/`); raw 311 MB model outputs under the Zenodo DOI below |
 
