@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-# =============================================================================
-# Author : Yang Sitao (杨四涛)
-# Affiliation : School of Pharmaceutical Sciences, Dali University;
-#               The Third Affiliated Hospital of Dali University
-# Contact : yangsitaoasprin@swpu.edu.cn
-# License : MIT (see ../../LICENSE)
-# Purpose: Regenerates Figs. 1-8 of the manuscript from hardcoded real values.
-# =============================================================================
 """Publication-quality figures, all data from real results/ outputs.
 Style: CSBJ/Elsevier-ish, 300 dpi PNG + SVG, English-only text.
 """
@@ -129,7 +121,8 @@ def fig2_redesign_dG():
     err_f = np.array([2.2, 17.2, 6.1])
     x = np.arange(len(cands)); w = 0.36
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    fig, ax = plt.subplots(figsize=(7.6, 4.8))
+    fig.subplots_adjust(bottom=0.22)
     ax.bar(x - w/2, orig, w, label="original design (98-aa)", color=COL_ORIG, edgecolor="#999", linewidth=0.7)
     ax.bar(x + w/2, final, w, yerr=err_f, capsize=3, label="final redesigned (98-aa)",
            color=COL_FINAL, edgecolor="#0d3a5c", linewidth=0.7)
@@ -140,11 +133,17 @@ def fig2_redesign_dG():
     ax.axhline(0, color="k", linewidth=0.8)
     ax.set_xticks(x); ax.set_xticklabels(cands)
     ax.set_ylabel("MM-GBSA dG (kcal/mol)")
-    ax.set_title("Redesign: predicted binding improved (V1, V4) or maintained (V2)\n(more negative = stronger)")
-    ax.legend(frameon=False, fontsize=9)
-    ax.set_ylim(-150, 5)
-    ax.text(0.02, 0.95, "all vdW < 0 (no clash artifacts); V2 = conservative interface fine-tuning\nfor dual-receptor (KDR+Flt-1) blocking, not for ΔG gain",
-            transform=ax.transAxes, fontsize=8, color=COL_ACC, style="italic")
+    ax.set_title("Redesign: predicted binding improved (V1, V4) or maintained (V2)",
+                 loc="left", pad=8)
+    ax.legend(frameon=True, fontsize=9, loc="upper right",
+              facecolor="white", edgecolor="#cccccc", framealpha=1.0)
+    ax.set_ylim(-150, 15)
+    ax.text(0.5, -0.16,
+            "all vdW < 0 (no clash artifacts); V2 = conservative interface fine-tuning "
+            "for dual-receptor (KDR + Flt-1) blocking, not for ΔG gain",
+            transform=ax.transAxes, ha="center", va="top",
+            fontsize=8, color=COL_ACC, style="italic", wrap=True,
+            bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="#cccccc", lw=0.5))
     save(fig, "Fig2_redesign_dG")
 
 # =====================================================================
@@ -159,7 +158,8 @@ def fig3_full_length():
     clean165 = ["3/3", "2/3", "2/3"]
     x = np.arange(len(cands)); w = 0.36
 
-    fig, ax = plt.subplots(figsize=(7.2, 4.2))
+    fig, ax = plt.subplots(figsize=(7.6, 4.8))
+    fig.subplots_adjust(bottom=0.24)
     ax.bar(x - w/2, dg98, w, yerr=err98, capsize=3, label="VEGF-A RBD (1-98)",
            color="#9db8d2", edgecolor="#567", linewidth=0.7)
     ax.bar(x + w/2, dg165, w, yerr=err165, capsize=3, label="full-length VEGF-A165 (with HBD 99-165)",
@@ -170,13 +170,20 @@ def fig3_full_length():
         ax.annotate(f"{v:.0f}", (xi, v + 3), ha="center", fontsize=8.5, color="#555")
     ax.set_xticks(x); ax.set_xticklabels(cands)
     ax.set_ylabel("MM-GBSA dG (kcal/mol)")
-    ax.set_title("Full-length recheck: binding remains strong and vdW-clean")
-    ax.legend(frameon=False, fontsize=9)
-    ax.set_ylim(-150, 5)
-    ax.text(0.02, 0.95, "relative order V1 >= V4 > V2; clash seeds (vdW>0) excluded",
-            transform=ax.transAxes, fontsize=8.5, color=COL_ACC, style="italic")
-    ax.text(0.02, 0.88, "absolute dG not directly comparable between constructs (Section 3.5)",
-            transform=ax.transAxes, fontsize=7.5, color="#666", style="italic")
+    ax.set_title("Full-length recheck: binding remains strong and vdW-clean",
+                 loc="left", pad=8)
+    ax.legend(frameon=True, fontsize=9, loc="upper right",
+              facecolor="white", edgecolor="#cccccc", framealpha=1.0)
+    ax.set_ylim(-150, 15)
+    ax.text(0.5, -0.13,
+            "relative order V1 ≥ V4 > V2; clash seeds (vdW > 0) excluded",
+            transform=ax.transAxes, ha="center", va="top",
+            fontsize=8.5, color=COL_ACC, style="italic",
+            bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="#cccccc", lw=0.5))
+    ax.text(0.5, -0.22,
+            "absolute ΔG not directly comparable between constructs (Section 3.5)",
+            transform=ax.transAxes, ha="center", va="top",
+            fontsize=7.5, color="#666", style="italic")
     save(fig, "Fig3_full_length")
 
 # =====================================================================
@@ -189,7 +196,7 @@ def fig4_crossval():
     of3tmpl = np.array([-115.0, -51.1, 4613.1]) # std-sequence template recheck
     x = np.arange(len(cands)); w = 0.26
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.6, 4.2), gridspec_kw={"width_ratios": [1, 1.3]})
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.4, 4.6), gridspec_kw={"width_ratios": [1, 1.3]})
 
     # --- Panel (a): dG. V2 OF3-template value (+4613) is off-scale; drawn as hatched
     # placeholder + red ↑ marker so the on-scale bars and the off-scale annotation do
@@ -202,12 +209,14 @@ def fig4_crossval():
     ax1.axhline(0, color="k", linewidth=0.8)
     ax1.set_xticks(x); ax1.set_xticklabels(cands)
     ax1.set_ylabel("MM-GBSA dG (kcal/mol)")
-    ax1.set_title("(a) Binding free energy")
-    ax1.legend(frameon=False, fontsize=7.0, loc="lower left")
+    ax1.set_title("(a) Binding free energy", loc="left", pad=10)
+    ax1.legend(frameon=True, fontsize=7.5, loc="upper left",
+               facecolor="white", edgecolor="#cccccc", framealpha=1.0)
     ax1.set_ylim(-160, 320)
     ax1.annotate("dG = +4613.1 (off-scale)\nvdW = +4527.0\nsevere clash",
-                 (x[2]+w, 240), xytext=(x[2]+w, 300), ha="center", va="top",
+                 (x[2]+w, 240), xytext=(x[2]+w-0.05, 300), ha="center", va="top",
                  fontsize=7.5, color=COL_RED, fontweight="bold",
+                 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COL_RED, lw=0.6),
                  arrowprops=dict(arrowstyle="->", color=COL_RED, lw=1.0))
 
     # --- Panel (b): per-seed vdW scatter.
@@ -241,11 +250,15 @@ def fig4_crossval():
     ax2.set_xticks([1, 4, 7]); ax2.set_xticklabels(cands)
     ax2.set_xlim(-0.6, 8.6)
     ax2.set_ylabel("MM-GBSA vdW term (kcal/mol)")
-    ax2.set_title("(b) Per-seed vdW gating (vdW > 0 = interpenetrating pose)")
+    ax2.set_title("(b) Per-seed vdW gating (vdW > 0 = interpenetrating pose)",
+                  loc="left", pad=10)
     ax2.set_ylim(-160, 260)
-    ax2.legend(frameon=False, fontsize=7.5, loc="upper left")
+    ax2.legend(frameon=True, fontsize=7.5, loc="upper right",
+               facecolor="white", edgecolor="#cccccc", framealpha=1.0)
     ax2.text(0.02, 0.55, "green = clean-binding zone; red triangles = off-scale clash seeds",
-             transform=ax2.transAxes, fontsize=8, color=COL_ACC)
+             transform=ax2.transAxes, fontsize=8, color=COL_ACC,
+             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#cccccc", lw=0.5),
+             zorder=4)
     fig.suptitle("Cross-method validation and physical adjudication (MM-GBSA vdW gating)",
                  fontsize=11.5)
     save(fig, "Fig4_crossval")
