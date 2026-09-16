@@ -4,8 +4,9 @@
 #               The Third Affiliated Hospital of Dali University
 # Contact : yangsitaoasprin@swpu.edu.cn
 # License : MIT (see ../../LICENSE)
-# Purpose: Assembles the Graphical Abstract (matplotlib) using the two PyMOL
-#          panels produced by render_ga_outcome.py.
+# Purpose: Assembles the Graphical Abstract (pure matplotlib, no external
+#          image inputs).  render_ga_outcome.py renders the two PyMOL panels
+#          for the record, but the Graphical Abstract no longer embeds them.
 # =============================================================================
 """Graphical Abstract for CSBJ submission.
 
@@ -45,7 +46,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle
-from matplotlib.image import imread
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
