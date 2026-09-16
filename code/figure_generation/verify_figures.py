@@ -26,9 +26,34 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-# When this package lives at  <project>/repro/code/figure_generation/, the
-# manuscript + generated figures are at <project>/论文/{,figures}.
-ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", "论文"))
+
+
+def _find_paper_dir():
+    """Manuscript folder (<project>/论文), located by walking up from here.
+
+    Returns None inside a standalone clone of the published repro repository:
+    that bundle deliberately ships only the code and the minimal input data,
+    not the manuscripts, so this guardrail cannot run there.
+    """
+    here = HERE
+    for _ in range(6):
+        cand = os.path.join(here, "论文")
+        if os.path.isdir(cand):
+            return cand
+        parent = os.path.dirname(here)
+        if parent == here:
+            break
+        here = parent
+    return None
+
+
+ROOT = _find_paper_dir()
+if ROOT is None:
+    print("verify_figures.py: no 论文/ folder found above %s" % HERE)
+    print("This guardrail compares the figures against the manuscript text, "
+          "which is not shipped in the published code repository.")
+    print("It only runs in the authoring tree. Skipping.")
+    sys.exit(2)
 FIG_DEFAULT = os.path.join(ROOT, "figures")
 
 # make_figures reads sys.argv[1] at import time -> set the target dir first

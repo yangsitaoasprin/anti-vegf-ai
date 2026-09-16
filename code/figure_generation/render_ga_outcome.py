@@ -22,10 +22,27 @@ import os
 import pymol
 from pymol import cmd
 
-# Representative structures ship inside this repository (data/representative_structures/).
-_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # .../repro
+# Representative structures ship inside this repository (repro/data/representative_structures/).
+# Locate the repo root by walking up from this script (the data dir lives at
+# repro/data/, i.e. three levels above repro/code/figure_generation/).
+_HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def _find_repo_root(start):
+    d = start
+    for _ in range(6):
+        if os.path.isdir(os.path.join(d, "data", "representative_structures")):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            break
+        d = parent
+    return os.path.dirname(os.path.dirname(start))
+
+
+_REPO_ROOT = _find_repo_root(_HERE)                # .../repro
 REP = os.path.join(_REPO_ROOT, "data", "representative_structures")
-OUT = os.path.dirname(os.path.abspath(__file__))   # write PNGs next to this script
+OUT = _HERE                                        # write PNGs next to this script
 os.makedirs(OUT, exist_ok=True)
 
 V1_PDB = os.path.join(REP, "V1_s132_model_0.pdb")

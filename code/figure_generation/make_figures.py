@@ -10,6 +10,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
+# Printable-minimum text guard.  Text is sized in points relative to the FIGURE,
+# so a figure authored wider than it is placed prints its labels smaller than
+# the 7 pt floor Elsevier requires.  figstyle re-scales text against the placed
+# width declared in build_docx.py (FIG_WIDTH) -- the single source of truth --
+# and reports any text-vs-text collision the enlargement would introduce.
+import figstyle
+
 if len(sys.argv) > 1:
     FIG = sys.argv[1]
 else:
@@ -38,10 +45,16 @@ COL_ACC   = "#2a9d8f"
 COL_WARN  = "#e9c46a"
 
 def save(fig, name):
+    # Enforce the 7 pt printed-size floor BEFORE anything is written, and record
+    # the resulting typography so the submission gate can assert it later.
+    rep = figstyle.normalize(fig, name + ".png", out_dir=FIG)
     fig.savefig(os.path.join(FIG, name + ".png"))
     fig.savefig(os.path.join(FIG, name + ".svg"))
     plt.close(fig)
-    print("saved", name, flush=True)
+    print("saved", name, "|", figstyle.report_line(rep), flush=True)
+    for ov in rep["new_overlaps"]:
+        print("   !! new text overlap %.2f: %r <> %r" % (ov[3], ov[0], ov[1]),
+              flush=True)
 
 # =====================================================================
 # Figure 1. Pipeline schematic
@@ -68,13 +81,13 @@ def fig1_pipeline():
                            linewidth=0, edgecolor=color, facecolor=color)
         ax.add_patch(b)
         ax.text(x+w/2, y+0.15, text, ha="center", va="center", fontsize=7.8,
-                fontweight="bold", color="white")
+                fontweight="bold", color="black")
 
     # Stage labels (high enough above the topmost boxes)
     ax.text(1.35, 9.75, "Stage 1: Generation", fontsize=10.5, fontweight="bold", color=COL_FINAL, ha="center")
-    ax.text(4.25, 9.75, "Stage 2: Developability loop", fontsize=10.5, fontweight="bold", color=COL_ACC, ha="center")
-    ax.text(7.1, 9.75, "Stage 3: Cross-model validation", fontsize=10.5, fontweight="bold", color="#7b2cbf", ha="center")
-    ax.text(9.3, 9.75, "Stage 4", fontsize=10.5, fontweight="bold", color="#2e7d32", ha="center")
+    ax.text(4.25, 9.75, "Stage 2: Developability", fontsize=10.5, fontweight="bold", color=COL_ACC, ha="center")
+    ax.text(7.1, 9.75, "Stage 3: Cross-model", fontsize=10.5, fontweight="bold", color="#7b2cbf", ha="center")
+    ax.text(9.3, 9.75, "Stage 4: Wet lab", fontsize=10.5, fontweight="bold", color="#2e7d32", ha="center")
 
     box(0.3, 8.2, 2.1, 1.3, "RFdiffusion\nhotspot-guided binder growth\non VEGF-A RBD (60/80/100 aa)", fc="#eaf3fb")
     box(0.3, 6.2, 2.1, 1.3, "ProteinMPNN\nstructure -> sequence\n(3 temperatures)", fc="#eaf3fb")
@@ -201,8 +214,12 @@ def fig4_crossval():
     # --- Panel (a): dG. V2 OF3-template value (+4613) is off-scale; drawn as hatched
     # placeholder + red ↑ marker so the on-scale bars and the off-scale annotation do
     # not overlap visually.
-    ax1.bar(x - w, boltz, w, label="Boltz-1 (full-length, clean-seed mean)", color="#5fa8d3", edgecolor="#246")
-    ax1.bar(x, of3ss, w, label="OF3 sequence-only (initial batch)", color="#84a59d", edgecolor="#365")
+    # Method labels are kept SHORT and identical in panels (a) and (b): the
+    # qualifying detail ("clean-seed mean", "initial batch") lives in the caption
+    # and in Table 2.  Long in-figure legends are what forced the type below the
+    # 7 pt printed floor here.
+    ax1.bar(x - w, boltz, w, label="Boltz-1 (full-length)", color="#5fa8d3", edgecolor="#246")
+    ax1.bar(x, of3ss, w, label="OF3 sequence-only", color="#84a59d", edgecolor="#365")
     ax1.bar(x[:-1] + w, of3tmpl[:-1], w, label="OF3 template (1FLT)", color=COL_FINAL, edgecolor="#0d3a5c")
     ax1.bar(x[2] + w, 240, w, color="none", edgecolor=COL_RED, hatch="///", linewidth=1.0)
     ax1.scatter([x[2] + w], [240], marker="^", s=80, color=COL_RED, zorder=5)
@@ -213,8 +230,12 @@ def fig4_crossval():
     ax1.legend(frameon=True, fontsize=7.5, loc="upper left",
                facecolor="white", edgecolor="#cccccc", framealpha=1.0)
     ax1.set_ylim(-160, 320)
-    ax1.annotate("dG = +4613.1 (off-scale)\nvdW = +4527.0\nsevere clash",
-                 (x[2]+w, 240), xytext=(x[2]+w-0.05, 300), ha="center", va="top",
+    # The off-scale value is called out in the one band of panel (a) that is
+    # empty at the enlarged type size -- mid-plot, above the all-negative bars
+    # and below the upper-left legend.
+    ax1.annotate("dG = +4613.1\nvdW = +4527.0\n(off-scale clash)",
+                 (x[2]+w, 240), xytext=(0.04, 0.50), textcoords="axes fraction",
+                 ha="left", va="top",
                  fontsize=7.5, color=COL_RED, fontweight="bold",
                  bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COL_RED, lw=0.6),
                  arrowprops=dict(arrowstyle="->", color=COL_RED, lw=1.0))
@@ -223,13 +244,13 @@ def fig4_crossval():
     # The two interpenetrating Boltz/OF3-template V2 seeds (vdW +4803 / +4527) exceed the
     # panel range; they are drawn as red markers pinned to the panel top with explicit values.
     seeds = {
-        "Boltz-1 (3 seeds each)": [(-5.0, 0), (-72.9, 1), (-52.4, 2),
-                                   (-33.8, 3), (76.0, 4), (-63.6, 5),
-                                   (-0.8, 6), (-50.5, 7)],
+        "Boltz-1 (full-length)": [(-5.0, 0), (-72.9, 1), (-52.4, 2),
+                                  (-33.8, 3), (76.0, 4), (-63.6, 5),
+                                  (-0.8, 6), (-50.5, 7)],
         "OF3 sequence-only": [(-72.1, 0), (-59.1, 3), (10.3, 6)],
         "OF3 template (1FLT)": [(-74.8, 0), (-49.4, 3)],
     }
-    colormap = {"Boltz-1 (3 seeds each)": "#5fa8d3", "OF3 sequence-only": "#84a59d", "OF3 template (1FLT)": COL_FINAL}
+    colormap = {"Boltz-1 (full-length)": "#5fa8d3", "OF3 sequence-only": "#84a59d", "OF3 template (1FLT)": COL_FINAL}
     for method, pts in seeds.items():
         xs, ys, cl = [], [], []
         for v, i in pts:
@@ -250,55 +271,114 @@ def fig4_crossval():
     ax2.set_xticks([1, 4, 7]); ax2.set_xticklabels(cands)
     ax2.set_xlim(-0.6, 8.6)
     ax2.set_ylabel("MM-GBSA vdW term (kcal/mol)")
-    ax2.set_title("(b) Per-seed vdW gating (vdW > 0 = interpenetrating pose)",
-                  loc="left", pad=10)
+    ax2.set_title("(b) Per-seed vdW gating", loc="left", pad=10)
     ax2.set_ylim(-160, 260)
-    ax2.legend(frameon=True, fontsize=7.5, loc="upper right",
+    # Legend in the upper-left: that corner is the one region of panel (b) with
+    # no data and no annotation (the +4803 / +4527 seed labels are pinned at the
+    # top right, and the clean-zone note sits at mid-left).
+    ax2.legend(frameon=True, fontsize=7.5, loc="upper left",
                facecolor="white", edgecolor="#cccccc", framealpha=1.0)
-    ax2.text(0.02, 0.55, "green = clean-binding zone; red triangles = off-scale clash seeds",
+    # Two short lines instead of one long one: this note used to run ~575 px past
+    # the axes and was therefore the artist setting the figure's canvas width --
+    # and hence the type size everything else had to be scaled up to match.
+    ax2.text(0.02, 0.55, "green = clean binding zone\nred triangles = off-scale clash seeds",
              transform=ax2.transAxes, fontsize=8, color=COL_ACC,
              bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#cccccc", lw=0.5),
              zorder=4)
+    # Lifted clear of panel (a)'s topmost y-tick label, which it used to sit on.
     fig.suptitle("Cross-method validation and physical adjudication (MM-GBSA vdW gating)",
-                 fontsize=11.5)
+                 fontsize=11.5, y=1.05)
     save(fig, "Fig4_crossval")
 
 # =====================================================================
 # Figure 5. Developability improvements
 # =====================================================================
 def fig5_developability():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.6, 4.0))
+    """Aggregation screening of the redesign series.
 
+    Numbers are from 脚本/11_apr_official_beforeafter.py (official APR-Score
+    weights x our reconstructed 17/18 features); see
+    results/apr_official_integration/beforeafter_report.txt.
+    """
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(11.0, 4.1))
+    # Reserve a band above the axes for the suptitle and widen the gutter: at the
+    # enlarged type size the one-line panel titles used to run straight into the
+    # neighbouring panel's y-label and tick labels.
+    fig.subplots_adjust(top=0.78, wspace=0.34)
+
+    # ---- (a) the two WALTZ-positive regions of #4, scored by APR-Score
     regions = ["TALAIA\n(15-20)", "AIALFAAA\n(64-71)"]
-    p_orig = np.array([0.584, 0.548])
-    p_new = np.array([0.482, 0.488])
-    x = np.arange(2); w = 0.36
-    ax1.bar(x - w/2, p_orig, w, label="#4 original (vegf_len80_3)", color=COL_RED, alpha=0.75)
-    ax1.bar(x + w/2, p_new, w, label="V4 (16 mutations)", color=COL_ACC)
-    for xi, (a, b) in enumerate(zip(p_orig, p_new)):
-        ax1.annotate(f"-{100*(a-b)/a:.0f}%", (xi, max(a, b) + 0.02), ha="center",
+    p_par = np.array([0.4331, 0.4970])
+    p_v4 = np.array([0.4764, 0.5388])
+    x = np.arange(2); w = 0.34
+    b1 = ax1.bar(x - w/2, p_par, w, label="#4 parent",
+                 color=COL_RED, alpha=0.8)
+    b2 = ax1.bar(x + w/2, p_v4, w, label="V4 (16 mutations)",
+                 color=COL_ACC)
+    for xi, (a, b) in enumerate(zip(p_par, p_v4)):
+        # The delta sits well above the value labels -- at the enlarged type size
+        # they used to be printed on the same baseline and touch.
+        ax1.annotate(f"+{100*(b-a)/a:.0f}%", (xi, max(a, b) + 0.045), ha="center",
                      fontsize=9, color="#333", fontweight="bold")
+        ax1.annotate(f"{a:.2f}", (xi - w/2, a + 0.010), ha="center", fontsize=7.5,
+                     color="#444")
+        ax1.annotate(f"{b:.2f}", (xi + w/2, b + 0.010), ha="center", fontsize=7.5,
+                     color="#444")
+    ax1.axhline(0.5, ls="--", lw=1.0, color="#888")
+    # Labelled at the right end of the dashed line and kept short: at this type
+    # size the fuller phrase ("... (nHigh threshold)") is 420 px wide and reaches
+    # back across the 0.50 bar-value label.  The caption carries the gloss.
+    ax1.annotate("P = 0.5", (1.46, 0.505), ha="right", va="bottom",
+                 fontsize=7.5, color="#666")
     ax1.set_xticks(x); ax1.set_xticklabels(regions)
-    ax1.set_ylabel("APR-Score P(AMY=1)")
-    ax1.set_ylim(0.4, 0.68)
-    ax1.set_title("(a) APR-Score P(AMY=1) at the WALTZ-positive regions of #4")
+    ax1.set_ylabel("APR-Score P(AMY=1)  (official weights)")
+    ax1.set_ylim(0.30, 0.66)
+    ax1.set_xlim(-0.5, 1.5)
+    ax1.set_title("(a) WALTZ flags both regions;\nAPR-Score does not follow",
+                  fontsize=10, pad=6)
     ax1.legend(frameon=False, fontsize=8, loc="lower left")
-    ax1.text(0.55, 0.95, "WALTZ high-risk regions removed;\nAPR agrees directionally",
-             transform=ax1.transAxes, fontsize=7.5, color="#555", va="top")
+    # Left-aligned inside panel (a): this note used to start at mid-axes and run
+    # past the panel edge into panel (b)'s y-label.
+    ax1.text(0.02, 0.99,
+             "WALTZ: 2 regions / 14 residues  →  0\n"
+             "APR-Score: flat to slightly higher",
+             transform=ax1.transAxes, fontsize=8, color="#555", va="top", ha="left")
 
-    groups = ["#1 original", "V1\n(de-Ala, 16 mutations)"]
-    nhigh = np.array([31, 17])
-    bars = ax2.bar(groups, nhigh, color=[COL_RED, COL_FINAL], alpha=0.85, width=0.5)
-    for b, v in zip(bars, nhigh):
-        ax2.annotate(f"{v}", (b.get_x()+b.get_width()/2, v+0.4), ha="center",
-                     fontsize=11, fontweight="bold")
-    ax2.set_ylabel("APR-Score high-risk windows (nHigh, of 69)")
-    ax2.set_ylim(0, 38)
-    ax2.set_title("(b) De-alanine redesign reduces aggregation windows")
-    ax2.text(0.02, 0.95, "A% 38.8 -> 36.2; ipTM 0.84 -> 0.937\ndG -89.7 -> -129.9 kcal/mol",
-             transform=ax2.transAxes, fontsize=8.5, color=COL_ACC, va="top")
-    fig.suptitle("Quantified effects of the developability-integrated design loop",
-                 fontsize=11.5)
+    # ---- (b) A-rich windows, the metric the redesigns actually move
+    pairs = [("#1 parent", 16, "V1", 14), ("#2 parent", 15, "V2", 2),
+             ("#4 parent", 17, "V4", 12)]
+    label = [f"{p}\n→ {r}" for p, _, r, _ in pairs]
+    before = np.array([p[1] for p in pairs], float)
+    after = np.array([p[3] for p in pairs], float)
+    x2 = np.arange(3); w2 = 0.34
+    ax2.bar(x2 - w2/2, before, w2, label="parent",
+            color=COL_RED, alpha=0.8)
+    ax2.bar(x2 + w2/2, after, w2, label="redesigned", color=COL_FINAL)
+    for xi, (a, b) in enumerate(zip(before, after)):
+        ax2.annotate(f"{int(a)}", (xi - w2/2, a + 0.35), ha="center",
+                     fontsize=9.5, fontweight="bold", color="#444")
+        ax2.annotate(f"{int(b)}", (xi + w2/2, b + 0.35), ha="center",
+                     fontsize=9.5, fontweight="bold", color=COL_FINAL)
+        d = 100 * (b - a) / a
+        # Pushed well clear of the bar-value labels, which sit at +0.35.
+        ax2.annotate(f"{d:+.0f}%", (xi, max(a, b) + 2.9), ha="center",
+                     fontsize=8.5, color="#666")
+    ax2.set_xticks(x2); ax2.set_xticklabels(label)
+    ax2.set_ylabel("hexapeptide windows with ≥ 4 alanine")
+    # Headroom above the tallest bar (17) so the legend and the delta labels do
+    # not compete for the same band.
+    ax2.set_ylim(0, 26)
+    ax2.set_title("(b) Poly-alanine density across\nthe three redesign moves",
+                  fontsize=10, pad=6)
+    ax2.legend(frameon=False, fontsize=8, loc="lower right")
+    # Wrapped so the line stays inside its own panel; unwrapped it ran ~215 px
+    # past the axes and was the artist setting the whole figure's canvas width.
+    ax2.text(0.02, 0.99,
+             "total Ala 31→33 (#1),\n38→23 (#2), 33→31 (#4)",
+             transform=ax2.transAxes, fontsize=7.5, color="#666", va="top")
+
+    fig.suptitle("WALTZ and the official APR-Score are complementary, not redundant",
+                 fontsize=11)
     save(fig, "Fig5_developability")
 
 # =====================================================================
@@ -326,7 +406,7 @@ def fig6_dimer():
                     color=COL_FINAL, fontweight="bold")
     ax.set_title("VEGF dimer (2xVEGF165) + binder template modeling: V4 bridges the dimer interface\n(single best-seed OF3 run per candidate)")
     ax.legend(frameon=False, fontsize=8)
-    ax.text(0.02, 0.95, "V4 scores ~0.68 against both VEGF chains\n-> potential dimerization-blocking mechanism\n(requires SPR/BLI confirmation)",
+    ax.text(0.02, 0.95, "V4 scores 0.66-0.68 against both VEGF chains\n-> potential dimerization-blocking mechanism\n(requires SPR/BLI confirmation)",
             transform=ax.transAxes, fontsize=8.5, color=COL_ACC, va="top")
     save(fig, "Fig6_dimer")
 

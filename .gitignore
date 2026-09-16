@@ -2,3 +2,13 @@
 fig7_out/
 *.png
 !data/**/*.png
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Local backups / snapshots -- must never be published
+*.bak
+*.bak_*
+*_bak_*
