@@ -1,0 +1,23 @@
+{
+  "creators": [
+    {
+      "name": "Yang, Sitao",
+      "orcid": "0009-0006-6442-4250",
+      "affiliation": "The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "mit",
+  "language": "eng",
+  "keywords": [
+    "VEGF-A",
+    "miniprotein binder",
+    "de novo protein design",
+    "Boltz-1",
+    "OpenFold3",
+    "MM-GBSA",
+    "developability screening",
+    "reproducibility"
+  ]
+}
