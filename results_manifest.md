@@ -5,7 +5,7 @@ The published figures and tables are fully reproducible from the **bundled** dat
 to re-derive **any individual pose** or re-run the scoring, the complete raw predictions
 are deposited on **Zenodo** (CC-BY-4.0).
 
-> **Zenodo DOI (placeholder — fill after upload):** `10.5281/zenodo.22872635`
+> **Zenodo DOI:** `10.5281/zenodo.22872635`
 > Upload steps: see `UPLOAD_GUIDE.md`.
 > **Related deposit — APR-Score / CCS recovery record:** `https://doi.org/10.5281/zenodo.22866972`
 > (the scripts, derived tables and internal reports behind the aggregation

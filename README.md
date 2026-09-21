@@ -67,12 +67,15 @@ repro/
 └── data/
     ├── representative_structures/ # 5 complex structures used for Fig. 7 & Graphical Abstract
     ├── templates/                 # 1FLT crystal template (PDB + mmCIF)
-    └── manuscript_tables/         # candidates_6_final.csv + per-seed MM-GBSA (Table S2)
+    ├── manuscript_tables/         # candidate tables (pre- and post-redesign) + per-seed MM-GBSA (Table S2)
+    ├── hotspots.txt               # KDR hotspot residues used for pipeline conditioning
+    ├── hotspots_negctrl.txt       # matched random negative-control conditioning set
+    └── patch_analyzer/            # raw BioLuminate Patch Analyzer output (Table S5 layer)
 ```
 
 > **Note on the §2.10 MD cross-check:** the MD production/evaluation source
 > (`06a_implicit_md.py`, `06b_trajectory_mmgbsa.py`) lives in the main project's
-> `脚本/` directory, not bundled here. To make this repository fully self-contained for
+> script directory, not bundled here. To make this repository fully self-contained for
 > the MD layer, copy those two scripts (plus `openmm`/`pdbfixer`) into `code/analysis/`
 > — see "Planned additions" below. The figure/table layers below are fully runnable as-is.
 
@@ -132,10 +135,12 @@ directories (`results/...` in the full project) or the bundled tables in
 | `05b_waltz_aggregation.py` | WALTZ aggregation-risk filter |
 | `05o_mmgbsa_if.py`, `05r_energy_breakdown.py`, `05w_parse_conservative.py` | MM-GBSA interface / energy decomposition / conservative-mutation parsing |
 | `analyze_binding_mode.py`, `analyze_binding_mode_4.py`, `analyze_binding_mode_5.py` | per-candidate binding-mode analysis |
+| `17_patch_analyzer.py`, `18_patch_crossref.py` | BioLuminate Patch Analyzer structural-exposure layer, and its cross-reference to the sequence-level aggregation tools (Section 2.5, Table S5) |
+| `run_boltz_5seed.py` | adds the two extra Boltz-1 seeds (s7, s23) to the full-length VEGF-A165 panel (Section 3.5, Table S3) |
 
 > The §2.10 MD cross-check (`06a_implicit_md.py`, `06b_trajectory_mmgbsa.py`) is **not**
 > bundled in this repository yet — see "Planned additions". Its results (per-frame ΔG above)
-> are reported from the main project's `脚本/` runs.
+> are reported from the main project's script runs.
 
 ## code/design_pipeline
 
@@ -177,7 +182,7 @@ download is required.
 | `render_ga_outcome.py` | `GA_V1_contact.png`, `GA_V4_bridge.png` | **PyMOL** (open-source); reads `data/representative_structures/` |
 | `make_fig7_pymol.py` | Fig. 7 panels (V1/V2/V4) | **PyMOL** (open-source); reads `data/representative_structures/` |
 | `figstyle.py` | *library*: enforces Elsevier's 7 pt printed-text minimum | Matplotlib; reads `FIG_FILES`/`FIG_WIDTH` from `build_docx.py` when that file is present, otherwise its built-in width table |
-| `verify_figures.py` | guardrail: figures match manuscript text | **authoring tree only** -- needs the `论文/` folder, which is not shipped here |
+| `verify_figures.py` | guardrail: figures match manuscript text | **authoring tree only** -- needs the manuscript folder, which is not shipped here |
 
 - `verify_figures.py` asserts the candidate→column mapping in Fig. 4 and that the Fig. 2 /
   Fig. 6 captions use the correct verbs ("improved" vs "maintained"; "both chains" vs
@@ -201,17 +206,27 @@ download is required.
   provided for **method transparency**; they are clearly marked and will not run without
   the corresponding licensed software. The analysis and figure-generation layers run
   entirely on open tools (Boltz-1, OpenFold3, PyMOL open-source, NumPy, Matplotlib).
+- **Portability.** The scripts here are the pipeline sources with machine-specific absolute
+  paths replaced by environment variables or repository-relative ones (`DEA_REDESIGN_DIR`,
+  `BOLTZ_BIN`, `os.path.expanduser("~")`). All numerical logic is unchanged.
 - **Target construct.** All design work targets the 98-aa VEGF-A RBD (PDB 1FLT chain W,
   residues 1–98). Wet-lab validation must use full-length VEGF-A165 (UniProt P15692-4,
   includes the heparin-binding domain 111–165).
 
 ## Planned additions (to make this repository self-contained)
 
-- Bundle `06a_implicit_md.py` + `06b_trajectory_mmgbsa.py` from the main project `脚本/`
-  into `code/analysis/`, so the §2.10 MD cross-check is reproducible from this repository.
+- Bundle `06a_implicit_md.py` + `06b_trajectory_mmgbsa.py` from the main project's script
+  directory into `code/analysis/`, so the §2.10 MD cross-check is reproducible from this repository.
+*Done (v1.3):* the BioLuminate Patch Analyzer drivers (`17_patch_analyzer.py`,
+`18_patch_crossref.py`) and the five-seed Boltz-1 runner (`run_boltz_5seed.py`) are now bundled
+in `code/analysis/`, together with their inputs and raw output in `data/hotspots*.txt`,
+`data/patch_analyzer/` and `data/manuscript_tables/`. With those in place, **every file path
+cited in the manuscript resolves inside one of the two deposit records** (this repository, or
+the APR-Score / CCS recovery record).
+
 *Done:* `make_fig8_interface_stats.py`, `make_figS1_apr_recovery.py` and `figstyle.py` are
 now bundled in `code/figure_generation/`, so the entire figure layer reproduces from a
-clone. Verified by copying the bundle into a directory with no `论文/` folder and running
+clone. Verified by copying the bundle into a directory with no manuscript folder and running
 every generator there (all exit 0, nothing written outside the clone).
 
 ## Citation
