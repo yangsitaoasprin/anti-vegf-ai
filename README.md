@@ -1,4 +1,4 @@
-# Reproducible code & data — *Developability-gated, multi-model virtual screening of de novo anti-VEGF-A miniprotein binders*
+# Reproducible code & data — *Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders*
 
 This repository provides the code and minimal supporting data needed to reproduce the
 figures, tables, and physical-ranking results reported in the accompanying CSBJ
@@ -41,7 +41,7 @@ consistent with the single-conformation ranking (V1 ≥ V4 > V2).
 | | |
 |---|---|
 | **Author** | Yang Sitao (杨四涛) |
-| **Affiliation** | School of Pharmaceutical Sciences, Dali University; The Third Affiliated Hospital of Dali University |
+| **Affiliation** | College of Pharmacy, Dali University; The Third Affiliated Hospital of Dali University |
 | **Email** | yangsitaoasprin@swpu.edu.cn |
 | **Code license** | MIT (see `LICENSE`) |
 | **Data license** | CC-BY-4.0 (representative structures + tables in `data/`); raw 311 MB model outputs under the Zenodo DOI below |

@@ -145,8 +145,8 @@ ls -lh anti_vegf_raw_results.tar.gz
 |---|---|
 | **Upload type** | `Dataset` |
 | **Publication date** | 保持默认（今天）或选投稿日 |
-| **Title** | *Raw model outputs for "Developability-gated, multi-model virtual screening of de novo anti-VEGF-A miniprotein binders"* |
-| **Authors** | `Sitao Yang`；affiliation 按标题页原样填 `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
+| **Title** | *Raw model outputs for "Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders"* |
+| **Authors** | `Sitao Yang`；affiliation 按标题页原样填 `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; College of Pharmacy, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
 | **Description** | 复制 `results_manifest.md` 的摘要段：说明包含 Boltz-1 pdb、OpenFold3 cif/json、MM-GBSA 逐种子值，及与论文 Table 2 / Fig. 4 的对应关系 |
 | **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)**（CSBJ 偏好开放许可；不要用 "Restricted") |
 | **Keywords** | `VEGF-A`, `miniprotein binder`, `Boltz-1`, `OpenFold3`, `MM-GBSA`, `de novo protein design` |
@@ -167,7 +167,7 @@ ls -lh anti_vegf_raw_results.tar.gz
 
 - Zenodo 的 DOI 是**版本化**的：点 **New version** 可上传修订，旧 DOI 仍指向旧版，新版本获得新 DOI，
   同时有一个**总 DOI**（`10.5281/zenodo.XXXXXXX` 无后缀）始终指向最新版。
-- 论文里建议引用**总 DOI（无版本号后缀）**，这样将来你补数据，读者永远拿到最新版。
+- 论文里建议引用**具体版本的 DOI**（Zenodo 页面上带版本号后缀的那个）：Zenodo 官方口径是引用版本 DOI，好让读者拿到你实际用于复现的那一版；总 DOI（无后缀）始终指向最新版，适合放在 “latest version” 语境里。
 
 ### 2.7 回填占位
 
@@ -207,15 +207,16 @@ Zenodo → **Upload** → **New upload** → 拖入 zip → 按下表填写：
 | **Upload type** | `Dataset` |
 | **Publication date** | 保持默认（今天）或选投稿日 |
 | **Title** | *APR-Score and CCS recovery — analysis record for the manuscript "Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders"* |
-| **Authors** | `Sitao Yang`；affiliation `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
+| **Authors** | `Sitao Yang`；affiliation `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; College of Pharmacy, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
 | **Description** | 复制归档内 `README_APR_CCS.md` 的开头段（写明范围、17/18 维复原结果与残余缺口） |
 | **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)** |
 | **Keywords** | `amyloid`, `aggregation propensity`, `APR-Score`, `CCS`, `protein design`, `reproducibility` |
 | **Related identifiers** | **+ Add** → 论文 DOI（录用后），relation 选 **"Is supplemented by"** |
 
-> ⚠️ **标题必须与稿件标题逐字一致。** Zenodo 的元数据在 **Publish 之后即冻结**，
-> 之后想改只能发新版本、拿新 DOI。这个归档 zip 已经为这个原因重建过一次
-> （旧标题漏掉了 "Developability-gated virtual screening of"）——不要退回旧短标题。
+> ⚠️ **标题必须与稿件标题逐字一致。** 但要更正一点：Zenodo 的**元数据（标题、作者、许可、关键词等）
+> 在 Publish 之后仍可随时修改，且不影响 DOI**；真正不可更换的是**文件**与 PID——要改文件只能
+> 点 **New version**、另拿一个新 DOI。这个归档 zip 曾经因标题不一致重建过一次
+> （旧标题漏掉了 “Developability-gated virtual screening of”）——不要退回旧短标题。
 
 ### 2b.3 发布并拿到 DOI
 

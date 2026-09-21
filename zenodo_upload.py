@@ -59,7 +59,7 @@ MANUSCRIPT_TITLE = ("Developability-gated virtual screening of de novo "
 CREATOR = {
     "name": "Yang, Sitao",
     "affiliation": "The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; "
-                   "School of Pharmaceutical Science, Dali University, Dali, Yunnan, China",
+                   "College of Pharmacy, Dali University, Dali, Yunnan, China",
     "orcid": "0009-0006-6442-4250",
 }
 LICENSE = "cc-by-4.0"

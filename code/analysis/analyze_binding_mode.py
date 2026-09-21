@@ -1,6 +1,6 @@
 # =============================================================================
 # Author : Yang Sitao (杨四涛)
-# Affiliation : School of Pharmaceutical Sciences, Dali University;
+# Affiliation : College of Pharmacy, Dali University;
 #               The Third Affiliated Hospital of Dali University
 # Contact : yangsitaoasprin@swpu.edu.cn
 # License : MIT (see ../../LICENSE)

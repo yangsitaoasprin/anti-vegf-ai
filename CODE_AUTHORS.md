@@ -10,7 +10,7 @@ can attribute and contact the author of the code.
 |---|---|
 | **Name** | Sitao Yang (杨四涛) |
 | **Affiliation 1** | The Third Affiliated Hospital of Dali University, Dali, Yunnan, China |
-| **Affiliation 2** | School of Pharmaceutical Science, Dali University, Dali, Yunnan, China |
+| **Affiliation 2** | College of Pharmacy, Dali University, Dali, Yunnan, China |
 | **Email (corresponding)** | yangsitaoasprin@swpu.edu.cn |
 | **ORCID** | [0009-0006-6442-4250](https://orcid.org/0009-0006-6442-4250) |
 | **Roles (CRediT, code-relevant)** | Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Visualization, Project administration, Funding acquisition |
@@ -56,7 +56,7 @@ Department of Education**, Grant No. **2026J0890**.
 
 ## How to cite
 
-Yang Sitao. *Developability-gated, multi-model virtual screening of de novo anti-VEGF-A
+Yang Sitao. *Developability-gated virtual screening of de novo anti-VEGF-A
 miniprotein binders — code & data*. GitHub: `<repo-URL>` (DOI placeholder). Zenodo:
 `<zenodo-DOI>` (raw model outputs).
 

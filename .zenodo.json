@@ -1,9 +1,10 @@
 {
+  "title": "Reproducible code and supporting data for \"Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders\"",
   "creators": [
     {
       "name": "Yang, Sitao",
       "orcid": "0009-0006-6442-4250",
-      "affiliation": "The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China"
+      "affiliation": "The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; College of Pharmacy, Dali University, Dali, Yunnan, China"
     }
   ],
   "upload_type": "software",
