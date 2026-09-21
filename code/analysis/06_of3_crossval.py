@@ -13,7 +13,7 @@
 设计目标
 --------
 我们整套从头设计流程一直只用 Boltz-1 单方法，且 RTX5090 seed 不稳定反复产出穿模伪结构。
-OpenFold3（AF3 开源复现，部署在 WSL Ubuntu-24.04 / conda env openfold）作为**完全独立**的
+OpenFold3（AF3 开源复现，OpenFold3-preview v0.4.5；部署在 WSL Ubuntu-24.04 / conda env openfold）作为**完全独立**的
 预测器，可提供：
   - chain_pair_iptm：逐链对界面分，单独抽出 VEGF<->binder 界面
   - has_clash：内置穿模标志（0/1），与我们 MM-GBSA vdW 门控互补
@@ -27,6 +27,8 @@ Windows 侧生成 AF3 风格 query JSON -> wsl -d Ubuntu-24.04 调 run_openfold 
 
 注意
 ----
+- 软件版本钉在 **OpenFold3-preview v0.4.5**（版本 DOI 10.5281/zenodo.21901273，2026-08-12 发布）；
+  本仓库所有 OF3 数值均由该版本产生，复现时请钉到同一版本。
 - of3-p2-155k.pt 是 155k 步训练检查点（非最终 AF3 等效权重），OF3 结果作**佐证**，
   最终结合能裁决仍走 MM-GBSA vdW 门控。MSA 默认单序列（--use-msa-server=false）。
 - OF3 模板机制（比 AF3 简单）：每条 chain 加 `template_cif_paths` + `template_cif_chain_ids`

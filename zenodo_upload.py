@@ -3,6 +3,15 @@
 """
 zenodo_upload.py - stage and publish the two Zenodo data deposits for the manuscript.
 
+!! SUPERSEDED (2026-09-21) - DO NOT RUN. Use zenodo_deposit.py instead. !!
+   This script targets the legacy depositions API at /api/depositions, which no
+   longer exists on Zenodo production (verified: HTTP 404 "The requested URL was
+   not found on the server"). The real legacy prefix is /api/deposit/depositions,
+   and the supported path is now the InvenioRDM API (POST /api/records).
+   Kept only as a historical record; every call here would 404.
+   Replacement: repro/zenodo_deposit.py (new API, DNS-pin fallback, --stage /
+   --publish / --edit-record), verified end-to-end against a mock InvenioRDM server.
+
 WHY THIS EXISTS
     The agent process on this machine cannot resolve zenodo.org (DNS blocked), so the
     two uploads have to run from YOUR terminal.  This script turns ~15 minutes of
@@ -54,6 +63,9 @@ ROOT = os.path.abspath(os.path.join(HERE, ".."))
 DEPO = os.path.join(ROOT, "zenodo_deposit")
 
 REPO_URL = "https://github.com/yangsitaoasprin/anti-vegf-ai"
+# Concept DOI of the archived code repository (GitHub -> Zenodo integration).
+# The version DOI of the snapshot these data pair with is 10.5281/zenodo.22866393.
+CODE_DOI = "10.5281/zenodo.22866148"
 MANUSCRIPT_TITLE = ("Developability-gated virtual screening of de novo "
                     "anti-VEGF-A miniprotein binders")
 CREATOR = {
@@ -178,9 +190,22 @@ class Zenodo(object):
                     mark = sent
                     sys.stderr.write("      ... %d / %d MB (%.0f%%)\n"
                                      % (sent >> 20, size >> 20, 100.0 * sent / size))
-            resp = conn.getresponse()
-            body = resp.read().decode(errors="replace")
-            return resp.status, body
+            try:
+                resp = conn.getresponse()
+                body = resp.read().decode(errors="replace")
+                return resp.status, body
+            except Exception as exc:
+                # The socket died before the server answered. The usual cause is a
+                # token that works for reads but lacks `deposit:write`: Zenodo
+                # rejects the body (403) and drops the connection. Return a
+                # synthetic status so main() prints one clean line instead of a
+                # traceback after a multi-hundred-MB transfer.
+                return 0, ("connection aborted before the server answered "
+                           "(%s: %s). Most likely the token scope is not "
+                           "deposit:write, or the network dropped. The draft "
+                           "was created and is empty - re-run with "
+                           "--use <deposition id> to retry into the same draft."
+                           % (type(exc).__name__, exc))
         finally:
             fh.close()
             conn.close()
@@ -190,6 +215,7 @@ def meta_for(d, today):
     return {
         "title": d["title"],
         "upload_type": "dataset",
+        "version": "v1.0",
         "publication_date": today,
         "description": d["description"],
         "creators": [CREATOR],
@@ -197,6 +223,8 @@ def meta_for(d, today):
         "license": LICENSE,
         "keywords": d["keywords"],
         "related_identifiers": [
+            {"identifier": CODE_DOI, "relation": "isSupplementedBy",
+             "resource_type": "software"},
             {"identifier": REPO_URL, "relation": "isSupplementedBy",
              "resource_type": "software"},
         ],
@@ -309,7 +337,11 @@ def main():
         print("Nothing was published. Review the drafts in the browser, then re-run:")
         print("  python zenodo_upload.py --publish --use %s"
               % " ".join(str(dep["id"]) for _, dep in todo))
-        print("Metadata is FROZEN at publish time - check the titles against the manuscript.")
+        print("Check the titles and creators against the manuscript BEFORE publishing.")
+        print("Metadata stays editable after publishing and the DOI does not change;")
+        print("files can still be replaced in place for 30 days, after which changing")
+        print("files needs 'New version', which mints a new version DOI.")
+        print("Cite the VERSION DOI shown on the record page, not the concept DOI.")
     else:
         if args.emit and results:
             with open(args.emit, "w", encoding="utf-8") as f:

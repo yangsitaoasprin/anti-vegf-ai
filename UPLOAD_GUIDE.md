@@ -150,7 +150,8 @@ ls -lh anti_vegf_raw_results.tar.gz
 | **Description** | 复制 `results_manifest.md` 的摘要段：说明包含 Boltz-1 pdb、OpenFold3 cif/json、MM-GBSA 逐种子值，及与论文 Table 2 / Fig. 4 的对应关系 |
 | **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)**（CSBJ 偏好开放许可；不要用 "Restricted") |
 | **Keywords** | `VEGF-A`, `miniprotein binder`, `Boltz-1`, `OpenFold3`, `MM-GBSA`, `de novo protein design` |
-| **Related identifiers** | 点 **+ Add**，填 GitHub 仓库 URL，`Relation` 选 **"Is supplemented by"**（或 "References"），`Resource type` 选 `Software` |
+| **Version** | `v1.0`（与包名后缀 `_v1` 对齐） |
+| **Related identifiers** | 点 **+ Add** 填两项：① **`10.5281/zenodo.22866148`**（代码仓概念 DOI），`Relation` 选 **"Is supplemented by"**，`Resource type` 选 `Software`；② GitHub 仓库 URL `https://github.com/yangsitaoasprin/anti-vegf-ai`，同样 relation |
 | **Communities** | 可选：加入 `biosciences` 或你单位的 Zenodo community（非必须） |
 | **Grants / Funding** | 若论文 M4 填了基金号，在此关联（非必须） |
 
@@ -211,7 +212,8 @@ Zenodo → **Upload** → **New upload** → 拖入 zip → 按下表填写：
 | **Description** | 复制归档内 `README_APR_CCS.md` 的开头段（写明范围、17/18 维复原结果与残余缺口） |
 | **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)** |
 | **Keywords** | `amyloid`, `aggregation propensity`, `APR-Score`, `CCS`, `protein design`, `reproducibility` |
-| **Related identifiers** | **+ Add** → 论文 DOI（录用后），relation 选 **"Is supplemented by"** |
+| **Version** | `v1.0`（与包名后缀 `_v1` 对齐） |
+| **Related identifiers** | **+ Add** 三项：① **`10.5281/zenodo.22866148`**（代码仓概念 DOI），relation **"Is supplemented by"**，资源类型 `Software`；② GitHub 仓库 URL `https://github.com/yangsitaoasprin/anti-vegf-ai`，同样 relation；③ 论文 DOI（录用后） |
 
 > ⚠️ **标题必须与稿件标题逐字一致。** 但要更正一点：Zenodo 的**元数据（标题、作者、许可、关键词等）
 > 在 Publish 之后仍可随时修改，且不影响 DOI**；真正不可更换的是**文件**与 PID——要改文件只能
@@ -221,6 +223,41 @@ Zenodo → **Upload** → **New upload** → 拖入 zip → 按下表填写：
 ### 2b.3 发布并拿到 DOI
 
 点 **Publish** → 确认 → 顶部出现 **`10.5281/zenodo.ZZZZZZZZ`**，复制它。
+
+---
+
+## 2c. 订正代码仓 v1.1 那条已发布记录的元数据
+
+代码仓的 GitHub→Zenodo 集成在 **v1.1 这个 tag 上还没有 `.zenodo.json`**，Zenodo 于是回落到默认值：
+把 **GitHub 登录名当作者**、把 `<owner>/<repo>: <release title>` 当标题、许可默认成 CC-BY-4.0、关键词为空。
+**v1.2 起已修正**（该 tag 上有 `.zenodo.json`），但 **v1.1 那条记录仍留在概念 DOI 的版本链里公开可见**，
+需要手动订正一次。打开：
+
+> `https://zenodo.org/records/22866149` → 右上角橙色 **Edit** → 按下表改 → 绿色 **Publish**
+
+| 字段 | 现在的值（错） | 改成 |
+|---|---|---|
+| **Title** | `yangsitaoasprin/anti-vegf-ai: v1.1 - reproducibility snapshot (three-deposit DOI workflow)` | `Reproducible code and supporting data for "Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders"` |
+| **Creators** | `yangsitao`（无 ORCID、无单位） | `Yang, Sitao`；ORCID `0009-0006-6442-4250`；affiliation `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; College of Pharmacy, Dali University, Dali, Yunnan, China` |
+| **License** | Creative Commons Attribution 4.0 | **MIT License**（与仓库 `LICENSE` 一致） |
+| **Keywords** | （空） | `VEGF-A`, `miniprotein binder`, `de novo protein design`, `Boltz-1`, `OpenFold3`, `MM-GBSA`, `developability screening`, `reproducibility` |
+
+**为什么不用发新版本**——Zenodo 官方口径是元数据发布后随时可改、**DOI 不变**：
+
+> “You can edit the metadata (title, creators, etc) of a published record at any time… This does not affect your DOI.” — `help.zenodo.org/docs/deposit/manage-records/`
+> “I only want to change the title of my upload, do I still get a new DOI? No…” — `zenodo.org/help/versioning`
+
+**文件**则另说：发布后 **30 天内**仍可原地替换（`support.zenodo.org`），超过 30 天才必须 **New version**（铸新版本 DOI）。
+v1.1 这条的错只在元数据，不必动文件。
+
+**代码仓 DOI 对照**——论文里引用**版本 DOI**；Zenodo 官方口径：
+*“You should normally always use the DOI for the specific version of your record in citations.”*
+
+| 用途 | DOI |
+|---|---|
+| 概念 DOI（始终指向最新版；**两条数据记录用它做 `Is supplemented by`**） | `10.5281/zenodo.22866148` |
+| v1.1 版本 DOI | `10.5281/zenodo.22866149` |
+| **v1.2 版本 DOI —— 论文里引这个** | `10.5281/zenodo.22866393` |
 
 ---
 

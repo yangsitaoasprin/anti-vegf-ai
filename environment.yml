@@ -20,6 +20,10 @@ dependencies:
       - boltz          # optional: only if re-running Boltz-1 predictions
       # openfold3 / pyg / etc. are optional and heavy; the bundled data is sufficient
       # to reproduce all published numbers without them.
+      # If you DO re-run the OpenFold3 cross-validation, pin the version used here:
+      #     openfold3-preview == 0.4.5     (version DOI: 10.5281/zenodo.21901273)
+      #     checkpoint: /root/.openfold3/of3-p2-155k.pt
+      #     driver:     code/analysis/06_of3_crossval.py
 
 # ---------------------------------------------------------------------------
 # Licensing note for the DESIGN layer (code/design_pipeline/):

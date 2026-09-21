@@ -57,9 +57,9 @@ Department of Education**, Grant No. **2026J0890**.
 ## How to cite
 
 Yang Sitao. *Developability-gated virtual screening of de novo anti-VEGF-A
-miniprotein binders — code & data*. GitHub: `<repo-URL>` (DOI placeholder). Zenodo:
-`<zenodo-DOI>` (raw model outputs).
+miniprotein binders — code & data*. GitHub: `<https://github.com/yangsitaoasprin/anti-vegf-ai>` (DOI placeholder). Zenodo:
+`<10.5281/zenodo.22872635>` (raw model outputs).
 
 The APR-Score / CCS aggregation-scoring recovery record — the analysis scripts, derived
 tables and internal reports behind Supplementary Fig. S1 of the manuscript — is deposited
-separately on Zenodo: `10.5281/zenodo.ZZZZZZZZ`.
+separately on Zenodo: `10.5281/zenodo.22866972`.
