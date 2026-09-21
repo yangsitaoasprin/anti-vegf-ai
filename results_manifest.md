@@ -7,6 +7,9 @@ are deposited on **Zenodo** (CC-BY-4.0).
 
 > **Zenodo DOI (placeholder — fill after upload):** `10.5281/zenodo.XXXXXXX`
 > Upload steps: see `UPLOAD_GUIDE.md`.
+> **Related deposit — APR-Score / CCS recovery record:** `https://doi.org/10.5281/zenodo.ZZZZZZZZ`
+> (the scripts, derived tables and internal reports behind the aggregation
+> screening and Supplementary Fig. S1).
 
 ## What is in the Zenodo archive (≈ 311 MB)
 

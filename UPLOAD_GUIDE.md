@@ -1,12 +1,19 @@
-# Upload guide — GitHub (code) + Zenodo (raw data)
+# Upload guide — GitHub (code) + Zenodo (raw data + APR/CCS recovery record)
 
-This repository is **local only** so far. Two public deposits are required for CSBJ
-compliance (Elsevier does **not** accept "available on request").
+This repository is **local only** so far. **Three** public deposits are required for CSBJ
+compliance (Elsevier does **not** accept "available on request"):
+
+| # | Deposit | Host | Size | Placeholder token |
+|---|---|---|---|---|
+| 1 | Code & minimal data (this `repro/` folder) | GitHub, with a Zenodo-minted archive DOI | ~1.4 MB | `XXXXXXX` |
+| 2 | Raw Boltz-1 / OpenFold3 predictions | Zenodo | 97.3 MB zipped (≈311 MB unpacked) | `YYYYYYYY` |
+| 3 | APR-Score / CCS recovery record (behind Fig. S1) | Zenodo | 0.84 MB | `ZZZZZZZZ` |
 
 > You (the author) must perform the actual push / upload — they need your credentials.
 > This guide tells you exactly what to do. After each deposit, paste the resulting DOI
 > back into `README.md`, `results_manifest.md`, `CODE_AUTHORS.md`, and the manuscript's
-> Data/Code availability statement.
+> Data/Code availability statement — or skip the hand-editing and run `backfill_dois.py`
+> (§3.1), which fills all three in one pass.
 
 ---
 
@@ -139,7 +146,7 @@ ls -lh anti_vegf_raw_results.tar.gz
 | **Upload type** | `Dataset` |
 | **Publication date** | 保持默认（今天）或选投稿日 |
 | **Title** | *Raw model outputs for "Developability-gated, multi-model virtual screening of de novo anti-VEGF-A miniprotein binders"* |
-| **Authors** | `Yang Sitao`； affiliation 填 `School of Pharmaceutical Sciences, Dali University; The Third Affiliated Hospital of Dali University`；可加 ORCID |
+| **Authors** | `Sitao Yang`；affiliation 按标题页原样填 `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
 | **Description** | 复制 `results_manifest.md` 的摘要段：说明包含 Boltz-1 pdb、OpenFold3 cif/json、MM-GBSA 逐种子值，及与论文 Table 2 / Fig. 4 的对应关系 |
 | **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)**（CSBJ 偏好开放许可；不要用 "Restricted") |
 | **Keywords** | `VEGF-A`, `miniprotein binder`, `Boltz-1`, `OpenFold3`, `MM-GBSA`, `de novo protein design` |
@@ -169,47 +176,104 @@ ls -lh anti_vegf_raw_results.tar.gz
 
 ---
 
+## 2b. Zenodo — the APR-Score / CCS recovery record (0.84 MB)
+
+This is the **third** deposit, and it is *not* part of the 311 MB archive above. It holds
+the analysis record behind the APR-Score / CCS aggregation scoring and
+**Supplementary Fig. S1**: the recovery scripts, the derived tables they regenerate, the
+verification ladder, and the internal reports documenting why the official APR-Score
+binary cannot run as shipped and how the featurizer was reconstructed. Small,
+self-contained and independently citable — hence its own DOI.
+
+### 2b.1 准备（包已打好并锁哈希）
+
+```bash
+cd /path/to/anti_VEGF_AI_project/zenodo_deposit
+ls -l anti_VEGF_AI_apr_ccs_recovery_v1.zip
+cat   anti_VEGF_AI_apr_ccs_recovery_v1.zip.sha256
+```
+
+> 期望值：**107 entries / 878,863 bytes (0.84 MB) / SHA256
+> `2ed0da6437ed9d2030745c36aa6caf5296f30b3d9d251edaebb68ee7603d94fc`**。
+> 若要重建，用 `python build_deposit_apr.py --force`；脚本会拒绝无 `--force` 覆盖，
+> 且覆盖前把旧哈希另存为 `*.sha256.prev`——**务必记下你实际传上去的是哪一个**。
+
+### 2b.2 上传与元数据
+
+Zenodo → **Upload** → **New upload** → 拖入 zip → 按下表填写：
+
+| 字段 | 填什么 |
+|---|---|
+| **Upload type** | `Dataset` |
+| **Publication date** | 保持默认（今天）或选投稿日 |
+| **Title** | *APR-Score and CCS recovery — analysis record for the manuscript "Developability-gated virtual screening of de novo anti-VEGF-A miniprotein binders"* |
+| **Authors** | `Sitao Yang`；affiliation `The Third Affiliated Hospital of Dali University, Dali, Yunnan, China; School of Pharmaceutical Science, Dali University, Dali, Yunnan, China`；ORCID `0009-0006-6442-4250` |
+| **Description** | 复制归档内 `README_APR_CCS.md` 的开头段（写明范围、17/18 维复原结果与残余缺口） |
+| **License** | **Creative Commons Attribution 4.0 (CC-BY-4.0)** |
+| **Keywords** | `amyloid`, `aggregation propensity`, `APR-Score`, `CCS`, `protein design`, `reproducibility` |
+| **Related identifiers** | **+ Add** → 论文 DOI（录用后），relation 选 **"Is supplemented by"** |
+
+> ⚠️ **标题必须与稿件标题逐字一致。** Zenodo 的元数据在 **Publish 之后即冻结**，
+> 之后想改只能发新版本、拿新 DOI。这个归档 zip 已经为这个原因重建过一次
+> （旧标题漏掉了 "Developability-gated virtual screening of"）——不要退回旧短标题。
+
+### 2b.3 发布并拿到 DOI
+
+点 **Publish** → 确认 → 顶部出现 **`10.5281/zenodo.ZZZZZZZZ`**，复制它。
+
+---
+
 ## 3. Backfill the DOIs
 
-Replace the placeholders (do this **after** you have both DOIs from §1.4 and §2.5):
+Replace the placeholders (do this **after** you have all three DOIs from §1.4, §2.5 and
+§2b.3):
 
-| File | Placeholder to replace |
-|---|---|
-| `README.md` | Zenodo DOI line |
-| `results_manifest.md` | `10.5281/zenodo.XXXXXXX` |
-| `CODE_AUTHORS.md` | `<zenodo-DOI>`, `<repo-URL>` |
-| `论文/Manuscript_v7.md` (Data/Code availability) | GitHub URL + Zenodo DOI |
-| `论文/Manuscript_ZH.md` (数据/代码可用性) | 同上（中文） |
+| File | Placeholder to replace | Which DOI goes in |
+|---|---|---|
+| `README.md` | Zenodo raw-data DOI line; the `ZZZZZZZZ` line | raw data + APR record |
+| `results_manifest.md` | `10.5281/zenodo.XXXXXXX`; `10.5281/zenodo.ZZZZZZZZ` | raw data + APR record |
+| `CODE_AUTHORS.md` | `<zenodo-DOI>`, `<repo-URL>`; `10.5281/zenodo.ZZZZZZZZ` | raw data + code + APR record |
+| `论文/Manuscript_v7.md` (Data/Code availability + supplementary-data paragraph) | `XXXXXXX`, `YYYYYYYY`, `ZZZZZZZZ` | all three |
+| `论文/Manuscript_ZH.md` (数据/代码可用性 + 补充数据段) | 同上（中文） | all three |
 
-> **IMPORTANT — the two `XXXXXXX` mean different things.** In the two manuscripts,
-> `10.5281/zenodo.XXXXXXX` is the **GitHub code-repo DOI** (from §1.4); in
+> **IMPORTANT — the same token means different things in different files.** In the two
+> manuscripts, `10.5281/zenodo.XXXXXXX` is the **GitHub code-repo DOI** (from §1.4); in
 > `results_manifest.md` it is the **Zenodo raw-data DOI** (from §2.5). Do not paste the
-> same value into both.
+> same value into both. `YYYYYYYY` (raw data) and `ZZZZZZZZ` (APR/CCS record) are
+> unambiguous — they map 1:1 in every file. This is why the replacements are file-scoped
+> in `backfill_dois.py` rather than a global search-and-replace.
+>
+> Each token sits **twice** in each manuscript, so a partial backfill is visible: the
+> submission gate asserts the three placeholder counts stay equal (`M. DEPOSITS`).
 
 ### 3.1 One-shot helper (recommended)
 
 `backfill_dois.py` in this folder does all replacements at once, scoped per file so the
-two `XXXXXXX` never get mixed up. It is **dry-run by default** (prints what would change,
-writes nothing) — add `--apply` to actually write:
+three `XXXXXXX` never get mixed up. It is **dry-run by default** (prints what would
+change, writes nothing) — add `--apply` to actually write:
 
 ```bash
 cd /path/to/anti_VEGF_AI_project/repro
 
 # preview (safe, no writes)
 python backfill_dois.py \
-    --repo-url https://github.com/yangsitaoasprin/anti-vegf-ai \
+    --repo-url   https://github.com/yangsitaoasprin/anti-vegf-ai \
     --github-doi 10.5281/zenodo.<代码DOI号> \
-    --zenodo-doi 10.5281/zenodo.<原始数据DOI号>
+    --zenodo-doi 10.5281/zenodo.<原始数据DOI号> \
+    --apr-doi    10.5281/zenodo.<APR/CCS记录DOI号>
 
 # apply the changes
 python backfill_dois.py ... --apply
 
 # commit the backfilled files, then push
-git add README.md results_manifest.md CODE_AUTHORS.md \
+git add README.md results_manifest.md CODE_AUTHORS.md backfill_dois.py \
          ../论文/Manuscript_v7.md ../论文/Manuscript_ZH.md
 git commit -m "Backfill GitHub + Zenodo DOIs"
 git push
 ```
+
+`--apr-doi` is optional: omit it and the `ZZZZZZZZ` sites are reported as `[skip-apr]`
+and left in place, so you can do the first two deposits now and the third later.
 
 The script prints a `git diff --stat` after `--apply` so you can verify the edits.
 (Paths are relative to `anti_VEGF_AI_project/`, so the repo works wherever it is cloned.)
@@ -221,12 +285,25 @@ placeholder strings with the corresponding values from §1.4 / §2.5.
 
 ---
 
-## 4. CSBJ Data/Code availability — required wording (already drafted in the manuscript)
+## 4. CSBJ Data/Code availability — the wording actually used in the manuscript
 
-> *Data availability.* Representative complex structures, the template (PDB 1FLT), the
-> final candidate table and the per-seed MM-GBSA decomposition are available in the
-> GitHub repository at `<repo-URL>` (DOI: `<github-DOI>`). The complete raw Boltz-1 and
-> OpenFold3 predictions (~311 MB) are deposited on Zenodo at
-> `https://doi.org/<zenodo-DOI>` under CC-BY-4.0. VEGF-A structural data derive from PDB
-> entry 1FLT. Code to regenerate all figures and tables is in the same GitHub repository
-> (MIT license).
+Both manuscripts now announce all **three** deposits, in **two** places each: the
+Data/Code-availability statement and the supplementary-data paragraph. The live English
+text is:
+
+> *Data availability.* Representative complex structures, the 1FLT crystal template, the
+> final candidate table and the per-seed MM-GBSA decomposition (Table S2) are available in
+> the code repository at `<repo-URL>` (DOI: `<github-DOI>` — to be minted on acceptance).
+> The complete raw Boltz-1 and OpenFold3 predictions (~311 MB), from which every reported
+> value is derived, are deposited on Zenodo at `<raw-data-DOI>` under CC-BY-4.0. The
+> recovery record for the APR-Score / CCS aggregation scoring — the analysis scripts,
+> derived tables and internal reports behind Supplementary Fig. S1 — is deposited on
+> Zenodo at `<apr-record-DOI>` under CC-BY-4.0. VEGF-A structural data derive from PDB
+> entry 1FLT (UniProt P15692-4). All code to regenerate the figures and tables is in the
+> same repository (MIT license). The study is fully computational and reports no primary
+> experimental data.
+
+The tokens above are guide-level shorthand. The real files hold the literal strings
+`10.5281/zenodo.XXXXXXX` / `YYYYYYYY` / `ZZZZZZZZ`, which `backfill_dois.py` fills in one
+pass; `论文/paper_check.py` reports them as PENDING (not FAIL) until then, and asserts the
+three counts stay symmetric.

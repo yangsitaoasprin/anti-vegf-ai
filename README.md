@@ -191,6 +191,10 @@ download is required.
   complex structures and the final/per-seed tables are bundled. The full 311 MB of raw
   Boltz-1 (`boltz_pdb/`) and OpenFold3 (`of3_out*/`) predictions — from which every number
   in the paper is derived — are deposited on **Zenodo** (DOI placeholder in `results_manifest.md`). Reviewers can therefore reproduce any individual pose.
+- **Aggregation-scoring record.** The APR-Score / CCS recovery chain behind the
+  aggregation screening and Supplementary Fig. S1 — scripts, derived tables and
+  internal reports — has its own **Zenodo** record:
+  `https://doi.org/10.5281/zenodo.ZZZZZZZZ`.
 - **Design-generation scripts.** `code/design_pipeline/` contains the full design pipeline,
   including steps that require third-party licenses (RFdiffusion commercial license,
   Schrödinger/Maestro commercial license, AlphaFold3 academic license). Those scripts are
