@@ -1,0 +1,9 @@
+Construct,Length,APR nHigh,Exposed (≥ 30 %),Buried (< 20 %),Zyggregator-positive residues,…of which exposed,AggScore,Net charge,Mean accessibility (%)
+V1,80,0,0,0,20,15,64.4,−2,40.4
+V2,100,12,9,0,11,9,48.5,−3,37.1
+V3 (probe),60,2,2,0,13,13,95.2,−6,42.3
+V4,80,3,3,0,22,12,46.1,−5,36.4
+V5 (probe),100,8,2,2,11,4,26.4,+7,30.1
+Parent #1,80,0,0,0,31,23,56.7,−3,40.8
+Parent #2,100,3,3,0,25,17,86.0,−3,39.6
+Parent #4,80,3,3,0,32,17,69.9,−2,35.5

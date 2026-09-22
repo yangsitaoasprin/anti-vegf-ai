@@ -1,0 +1,5 @@
+Metric,Value,Comment
+True positives,2 / 10,hexapeptide-level recall is low by design
+True negatives,10 / 10,specificity 100%
+Precision,1.000,detected positives are all true positives
+Sensitivity,0.200,consistent with the literature for hexapeptide-level WALTZ

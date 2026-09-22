@@ -2,6 +2,7 @@
 fig7_out/
 *.png
 !data/**/*.png
+!figures/**/*.png
 
 # Python bytecode
 __pycache__/

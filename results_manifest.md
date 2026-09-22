@@ -6,7 +6,7 @@ to re-derive **any individual pose** or re-run the scoring, the complete raw pre
 are deposited on **Zenodo** (CC-BY-4.0).
 
 > **Zenodo DOI:** `10.5281/zenodo.22872635`
-> Upload steps: see `UPLOAD_GUIDE.md`.
+> Upload steps are documented separately by the authors.
 > **Related deposit — APR-Score / CCS recovery record:** `https://doi.org/10.5281/zenodo.22866972`
 > (the scripts, derived tables and internal reports behind the aggregation
 > screening and Supplementary Fig. S1).

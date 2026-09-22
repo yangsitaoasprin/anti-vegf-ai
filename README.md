@@ -59,7 +59,7 @@ repro/
 ├── environment.yml                # conda env spec (analysis / figure generation)
 ├── requirements.txt               # pip-equivalent for the above
 ├── results_manifest.md            # inventory of the 311 MB raw model outputs (Zenodo)
-├── UPLOAD_GUIDE.md                # how to push to GitHub + deposit raw data on Zenodo
+├── figures/                       # published artwork: Figs. 1-8 + Fig. S1 + Graphical Abstract
 ├── code/
 │   ├── figure_generation/         # scripts that regenerate Figs. 1–8 + Graphical Abstract
 │   ├── analysis/                  # scripts that compute the reported scores / tables
@@ -67,7 +67,9 @@ repro/
 └── data/
     ├── representative_structures/ # 5 complex structures used for Fig. 7 & Graphical Abstract
     ├── templates/                 # 1FLT crystal template (PDB + mmCIF)
-    ├── manuscript_tables/         # candidate tables (pre- and post-redesign) + per-seed MM-GBSA (Table S2)
+    ├── manuscript_tables/         # Tables S1-S6 backing files + candidate tables (pre/post-redesign)
+    ├── per_seed/                  # raw per-seed Boltz-1 ipTM and MM-GBSA tables (Tables S2/S3)
+    ├── wetlab/                    # synthesis/cloning order set, primer lists, 8 complex PDBs
     ├── hotspots.txt               # KDR hotspot residues used for pipeline conditioning
     ├── hotspots_negctrl.txt       # matched random negative-control conditioning set
     └── patch_analyzer/            # raw BioLuminate Patch Analyzer output (Table S5 layer)
@@ -90,7 +92,7 @@ to reproduce the figures.
 conda env create -f environment.yml
 conda activate anti_vegf_repro
 
-# 2) regenerate Figs. 1–8 (writes PNG+SVG next to make_figures.py)
+# 2) regenerate Figs. 1-8; published artwork archived in ../figures/
 cd code/figure_generation
 python make_figures.py
 
@@ -192,8 +194,9 @@ download is required.
 
 ## Notes on scope & reproducibility
 
-- **Minimal supporting data.** To keep this repository light, only the representative
-  complex structures and the final/per-seed tables are bundled. The full 311 MB of raw
+- **Minimal supporting data.** To keep this repository light, only the published artwork
+  (`figures/`), the representative complex structures, the manuscript tables and the
+  wet-lab hand-off set are bundled. The full 311 MB of raw
   Boltz-1 (`boltz_pdb/`) and OpenFold3 (`of3_out*/`) predictions — from which every number
   in the paper is derived — are deposited on **Zenodo** (DOI: `https://doi.org/10.5281/zenodo.22872635`; see `results_manifest.md`). Reviewers can therefore reproduce any individual pose.
 - **Aggregation-scoring record.** The APR-Score / CCS recovery chain behind the
@@ -228,6 +231,13 @@ the APR-Score / CCS recovery record).
 now bundled in `code/figure_generation/`, so the entire figure layer reproduces from a
 clone. Verified by copying the bundle into a directory with no manuscript folder and running
 every generator there (all exit 0, nothing written outside the clone).
+
+*Done (v1.4):* the published artwork itself (`figures/`), the wet-lab hand-off set
+(`data/wetlab/`), the machine-readable backing files for Supplementary Tables S1/S3/S4/S5
+(`data/manuscript_tables/`), the raw per-seed Boltz-1 and MM-GBSA tables (`data/per_seed/`)
+and the per-construct Patch Analyzer outputs (`data/patch_analyzer/`) are now bundled. Every
+file named in the manuscript's data-availability statement therefore resolves inside one of
+the two deposit records.
 
 ## Citation
 
